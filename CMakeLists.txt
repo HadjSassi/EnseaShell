@@ -6,4 +6,5 @@ set(CMAKE_C_STANDARD 11)
 include_directories(inc)
 
 add_executable(EnseaShell src/main.c
-        src/io.c)
+        src/io.c
+        src/utils.c)

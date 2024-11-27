@@ -1,5 +1,21 @@
 # Synthesys Practical Work Ensea in the Shell
 
+## Question 4
+
+Now to capture signals, we've tested this example, 
+we run gedit which is continuous process, and then we've 
+located its PID from a new terminal by writing ```ps -e``` command
+
+Then we've sent a signal to this process gedit and the signal is kill
+which has a signal code 15 so either we send kill or kill -15 the same 
+result we'll get.
+
+![img.png](Q4_1.png)
+
+After hitting the enter button, we can see that we've captured the signal 15
+
+![img_1.png](Q4_2.png)
+
 ## Question3
 as you can see from the previous question, when we write exit, 
 our shell is printing command not found, so we added a verification
