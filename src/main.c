@@ -14,22 +14,8 @@ int main(void) {
 
     display_message(WELCOME_MSG);
 
+    display_message(PROMPTING_MSG);
     while (strcmp(inputBuffer, EXIT_KEY_WORD) != EQUALITY_VALUE) {
-        display_message(PROMPTING_MSG);
-
-        if (lastExitCode >= 0) {
-            display_message("[exit:");
-            char exitCode[10];
-            sprintf(exitCode, "%d", lastExitCode);
-            display_message(exitCode);
-            display_message("] ");
-        } else {
-            display_message("[sign:");
-            char signalNum[10];
-            sprintf(signalNum, "%d", -lastExitCode);
-            display_message(signalNum);
-            display_message("] ");
-        }
 
         if (!read_input(inputBuffer, BUFSIZE)) {
             display_message(FAREWELL_MSG);
