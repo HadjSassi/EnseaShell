@@ -23,5 +23,6 @@ int read_input(char *buffer, size_t size) {
         buffer[bytesRead - 1] = '\0';
         return 1;
     }
+    display_message(FAREWELL_MSG);
     return 0;
 }

@@ -7,6 +7,7 @@
 
 #define WELCOME_MSG "Bienvenue dans le Shell ENSEA.\nPour quitter, tapez 'exit'.\n"
 #define PROMPTING_MSG "enseash %"
+#define FAREWELL_MSG "Bye bye..."
 #define EXIT_KEY_WORD "exit"
 #define EMPTY_STRING ""
 #define CHILD_SELF_PID 0

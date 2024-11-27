@@ -17,10 +17,11 @@ int main(void) {
         display_message(PROMPTING_MSG);
 
         if (!read_input(inputBuffer, BUFSIZE)) {
+            display_message(FAREWELL_MSG);
             break;
         }
 
-        if (fork() == CHILD_SELF_PID) {
+        if (strcmp(inputBuffer, EXIT_KEY_WORD) != 0 && fork() == CHILD_SELF_PID) {
             char *args[] = {inputBuffer, NULL};
             if (execvp(args[0], args) == COMMAND_NOT_FOUND) {
                 display_message("Command not found.\n");
@@ -30,5 +31,8 @@ int main(void) {
             wait(NULL);
         }
     }
+
+    display_message(FAREWELL_MSG);
+
     return 0;
 }
