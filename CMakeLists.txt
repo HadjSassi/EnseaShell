@@ -3,4 +3,7 @@ project(EnseaShell C)
 
 set(CMAKE_C_STANDARD 11)
 
-add_executable(EnseaShell main.c)
+include_directories(inc)
+
+add_executable(EnseaShell src/main.c
+        src/io.c)
