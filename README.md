@@ -70,3 +70,6 @@ When we execute the code :
 and write anything always getting the same ouput
 
 ![img.png](img/Q1.png)
+
+
+BY ELLOUMI Molka & HADJ SASSI Mahdi
