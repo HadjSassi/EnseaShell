@@ -21,5 +21,18 @@
 #define ONE_SECOND_OF_MILLISECOND 1000000.0f
 #define EXIT_TEXT "[exit:"
 #define SIGNAL_TEXT "[sign:"
+#define INITIAL_VALUE 0
+#define TRUE 1
+#define FALSE 0
+#define PERMESSION 0644
+#define REDIRECT_OUTPUT ">"
+#define REDIRECT_INPUT "<"
+#define SEPERATOR " "
+#define FAILED_TO_OPEN_FILE "Failed to open output file"
+#define FAILED_TO_REDIRECT "Failed to redirect output"
+#define EXECUTION_ERROR "Command execution failed"
+#define CLOSING_BRACKETS "] "
+#define SIZE_BUFFER 10
+
 
 #endif //CONSTANTS_H

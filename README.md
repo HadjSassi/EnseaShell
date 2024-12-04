@@ -1,5 +1,22 @@
 # Synthesys Practical Work Ensea in the Shell
 
+## Question 7
+
+In this question to redirect ```stdin``` and ```stdout```, first we need to 
+make sure the presence of the symbols ```<``` or ```>```.
+
+For Handling Input Redirection (<):
+
+    We use open() to open the input file in read-only mode.
+    We use dup2() to duplicate the file descriptor and redirect stdin to the input file.
+
+For Handling Output Redirection (>):
+
+    We use open() to open the output file in write-only mode, creating it if it doesn't exist, and truncating it if it does.
+    We use dup2() to redirect stdout to the output file.
+
+![img.png](img/Q7.png)
+
 ## Question 6
 
 So to send multiple arguments to execute a command, we need to extract the 
