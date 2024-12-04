@@ -34,6 +34,6 @@
 #define FAILED_TO_CREATE_PIPE "Failed to create Pipe"
 #define CLOSING_BRACKETS "] "
 #define SIZE_BUFFER 10
-
+#define PIPE_SEPARATOR '|'
 
 #endif //CONSTANTS_H

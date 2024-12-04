@@ -72,6 +72,98 @@ void parseArguments(char *inputCopy, char **args, int *inputRedirected, int *out
     args[i] = NULL;
 }
 
+void parsePipeArguments(char *inputCopy, char ***commands) {
+    char *token = strtok(inputCopy, PIPE_SEPARATOR);
+    display_message("am here \n");
+    int cmdIndex = INITIAL_VALUE;
+    while (token != NULL) {
+        commands[cmdIndex++] = token;
+        token = strtok(NULL, PIPE_SEPARATOR);
+    }
+    commands[cmdIndex] = NULL;
+}
+
+int createPipe() {
+    int pipeFDs[2];
+    if (pipe(pipeFDs) == ELEMENT_NOT_FOUND) {
+        perror(FAILED_TO_CREATE_PIPE);
+        _exit(EXIT_FAILURE);
+    }
+    return pipeFDs[1];
+}
+
+void executeWithPipe(char **args, int inputFD, int outputFD) {
+    if (inputFD != ELEMENT_NOT_FOUND) {
+        if (dup2(inputFD, STDIN_FILENO) == ELEMENT_NOT_FOUND) {
+            perror(FAILED_TO_REDIRECT);
+            _exit(EXIT_FAILURE);
+        }
+    }
+
+    if (outputFD != ELEMENT_NOT_FOUND) {
+        if (dup2(outputFD, STDOUT_FILENO) == ELEMENT_NOT_FOUND) {
+            perror(FAILED_TO_REDIRECT);
+            _exit(EXIT_FAILURE);
+        }
+    }
+
+    if (execvp(args[0], args) == ELEMENT_NOT_FOUND) {
+        perror(EXECUTION_ERROR);
+        _exit(EXIT_FAILURE);
+    }
+}
+
+void handlePipeExecution(char **commands, int numCommands) {
+    int pipeFDs[2];
+    int inputFD = ELEMENT_NOT_FOUND;
+
+    for (int i = INITIAL_VALUE; i < numCommands; i++) {
+        char *args[BUFSIZE];
+        parseArguments(commands[i], args, NULL, NULL, NULL, NULL);
+
+        if (i < numCommands - 1) {
+            if (pipe(pipeFDs) == ELEMENT_NOT_FOUND) {
+                perror(FAILED_TO_CREATE_PIPE);
+                _exit(EXIT_FAILURE);
+            }
+        }
+
+        pid_t pid = fork();
+
+        if (pid == CHILD_SELF_PID) {
+            if (i > INITIAL_VALUE) {
+                if (dup2(inputFD, STDIN_FILENO) == ELEMENT_NOT_FOUND) {
+                    perror(FAILED_TO_REDIRECT);
+                    _exit(EXIT_FAILURE);
+                }
+            }
+
+            if (i < numCommands - 1) {
+                if (dup2(pipeFDs[1], STDOUT_FILENO) == ELEMENT_NOT_FOUND) {
+                    perror(FAILED_TO_REDIRECT);
+                    _exit(EXIT_FAILURE);
+                }
+            }
+
+            close(pipeFDs[0]);
+            close(pipeFDs[1]);
+
+            executeWithPipe(args, inputFD, pipeFDs[1]);
+        } else if (pid > CHILD_SELF_PID) {
+            if (inputFD != ELEMENT_NOT_FOUND) {
+                close(inputFD);
+            }
+            if (i < numCommands - 1) {
+                close(pipeFDs[1]);
+            }
+
+            inputFD = pipeFDs[0];
+
+            waitpid(pid, NULL, 0);
+        }
+    }
+}
+
 void handleChildProcess(char **args, int inputRedirected, const char *inputFile, int outputRedirected, const char *outputFile) {
     if (inputRedirected) {
         redirectInput(inputFile);
@@ -124,16 +216,27 @@ int execute_command(const char *inputBuffer, int *lastExitCode) {
 
     char *inputCopy = strdup(inputBuffer);
 
-    parseArguments(inputCopy, args, &inputRedirected, &outputRedirected, &inputFile, &outputFile);
+    if (strchr(inputBuffer, PIPE_SEPARATOR) != NULL) {
+        char *commands[BUFSIZE];
+        parsePipeArguments(inputCopy, commands);
+        int numCommands = 0;
 
-    pid_t pid = fork();
+        while (commands[numCommands] != NULL) {
+            numCommands++;
+        }
 
-    if (pid == CHILD_SELF_PID) {
-        handleChildProcess(args, inputRedirected, inputFile, outputRedirected, outputFile);
-    } else if (pid > CHILD_SELF_PID) {
-        handleParentProcess(pid, lastExitCode, &startTime, &endTime);
+        handlePipeExecution(commands, numCommands);
+    } else {
+        parseArguments(inputCopy, args, &inputRedirected, &outputRedirected, &inputFile, &outputFile);
+        pid_t pid = fork();
+        if (pid == CHILD_SELF_PID) {
+            handleChildProcess(args, inputRedirected, inputFile, outputRedirected, outputFile);
+        } else if (pid > CHILD_SELF_PID) {
+            handleParentProcess(pid, lastExitCode, &startTime, &endTime);
+        }
     }
 
     free(inputCopy);
     return EXIT_SUCCESS;
 }
+

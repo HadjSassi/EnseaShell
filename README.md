@@ -1,5 +1,13 @@
 # Synthesys Practical Work Ensea in the Shell
 
+## Question 8
+
+we've made a condition if we find this symbol ```'|'``` then we want to run the 
+code, but unfortunately we couldn't make the detection of the symbol in the input
+by this line, after debuging.
+```char *token = strtok(inputCopy, PIPE_SEPARATOR);```
+
+
 ## Question 7
 
 In this question to redirect ```stdin``` and ```stdout```, first we need to 
