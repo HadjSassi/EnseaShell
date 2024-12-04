@@ -1,5 +1,14 @@
 # Synthesys Practical Work Ensea in the Shell
 
+## Question 5
+
+Now to calculate the execution time for a process, we save the time before
+creating the new process and we save the finishing time after the wait of that
+process. And then we do the calculation and we print it.
+
+![img.png](img/Q5.png)
+
+
 ## Question 4
 
 Now to capture signals, we've tested this example, 

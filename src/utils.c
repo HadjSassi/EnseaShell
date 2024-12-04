@@ -12,9 +12,17 @@
 #include <time.h>
 
 float calculateTime(struct timespec *startTime, struct timespec *endTime) {
-    long elapsedTimeMs = (endTime->tv_sec - startTime->tv_sec) * 1000
-                         + (endTime->tv_nsec - startTime->tv_nsec) / 1000000;
-    return (float)elapsedTimeMs;
+    long elapsedTimeSec = endTime->tv_sec - startTime->tv_sec;
+    long elapsedTimeNs = endTime->tv_nsec - startTime->tv_nsec;
+
+    if (elapsedTimeNs < INITIAL_SECOND) {
+        elapsedTimeSec--;
+        elapsedTimeNs += MILLISECOND_TO_SECOND;
+    }
+
+    long totalTimeNs = (elapsedTimeSec * MILLISECOND_TO_SECOND) + elapsedTimeNs;
+
+    return totalTimeNs / ONE_SECOND_OF_MILLISECOND;
 }
 
 int execute_one_command(const char *inputBuffer, int *lastExitCode) {
@@ -50,7 +58,7 @@ int execute_one_command(const char *inputBuffer, int *lastExitCode) {
         }
 
         char elapsedTimeStr[20];
-        sprintf(elapsedTimeStr, "|%ldms", elapsedTimeMs);
+        sprintf(elapsedTimeStr, "|%.3fms", elapsedTimeMs);
         display_message(elapsedTimeStr);
         display_message("] ");
     }
