@@ -1,5 +1,19 @@
 # Synthesys Practical Work Ensea in the Shell
 
+## Question 6
+
+So to send multiple arguments to execute a command, we need to extract the 
+arguments separately and then we put in the table to send it to the execvp 
+that can accept multiple arguments.
+
+In the example below, we can see that we executed multiple commands with multiple
+arguments.
+But for the last command example, we got No fortunes found, and that's not the
+desired behaviour requested, yet this what we found even in our terminals 
+
+![img.png](img/Q6.png)
+
+
 ## Question 5
 
 Now to calculate the execution time for a process, we save the time before

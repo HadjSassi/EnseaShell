@@ -21,7 +21,7 @@ int main(void) {
             break;
         }
         if (strcmp(inputBuffer, EXIT_KEY_WORD) != EQUALITY_VALUE)
-            execute_one_command(inputBuffer, &lastExitCode);
+            execute_command(inputBuffer, &lastExitCode);
     }
 
     display_message(FAREWELL_MSG);

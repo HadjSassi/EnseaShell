@@ -5,6 +5,6 @@
 #ifndef UTILS_H
 #define UTILS_H
 
-int execute_one_command(const char *inputBuffer, int *lastExitCode);
+int execute_command(const char *inputBuffer, int *lastExitCode);
 
 #endif //UTILS_H

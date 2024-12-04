@@ -7,6 +7,7 @@
 #include "constants.h"
 #include "io.h"
 #include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 #include <time.h>
@@ -25,13 +26,24 @@ float calculateTime(struct timespec *startTime, struct timespec *endTime) {
     return totalTimeNs / ONE_SECOND_OF_MILLISECOND;
 }
 
-int execute_one_command(const char *inputBuffer, int *lastExitCode) {
+int execute_command(const char *inputBuffer, int *lastExitCode) {
     struct timespec startTime, endTime;
     clock_gettime(CLOCK_MONOTONIC, &startTime);
+
     pid_t pid = fork();
 
     if (pid == CHILD_SELF_PID) {
-        char *args[] = { (char *)inputBuffer, NULL };
+        char *args[BUFSIZE];
+        char *inputCopy = strdup(inputBuffer);
+        char *token = strtok(inputCopy, " ");
+
+        int i = 0;
+        while (token != NULL) {
+            args[i++] = token;
+            token = strtok(NULL, " ");
+        }
+        args[i] = NULL;
+
         if (execvp(args[0], args) == ELEMENT_NOT_FOUND) {
             display_message(COMMAND_NOT_FOUND);
             _exit(ELEMENT_NOT_FOUND);
@@ -45,13 +57,13 @@ int execute_one_command(const char *inputBuffer, int *lastExitCode) {
 
         if (WIFEXITED(status)) {
             *lastExitCode = WEXITSTATUS(status);
-            display_message("[exit:");
+            display_message(EXIT_TEXT);
             char exitCode[10];
             sprintf(exitCode, "%d", *lastExitCode);
             display_message(exitCode);
         } else if (WIFSIGNALED(status)) {
             *lastExitCode = -WTERMSIG(status);
-            display_message("[sign:");
+            display_message(SIGNAL_TEXT);
             char signalNum[10];
             sprintf(signalNum, "%d", -(*lastExitCode));
             display_message(signalNum);
@@ -62,7 +74,7 @@ int execute_one_command(const char *inputBuffer, int *lastExitCode) {
         display_message(elapsedTimeStr);
         display_message("] ");
     }
+
     return EXIT_SUCCESS;
 }
-
 
