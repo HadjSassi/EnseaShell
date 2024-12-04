@@ -31,6 +31,7 @@
 #define FAILED_TO_OPEN_FILE "Failed to open output file"
 #define FAILED_TO_REDIRECT "Failed to redirect output"
 #define EXECUTION_ERROR "Command execution failed"
+#define FAILED_TO_CREATE_PIPE "Failed to create Pipe"
 #define CLOSING_BRACKETS "] "
 #define SIZE_BUFFER 10
 
